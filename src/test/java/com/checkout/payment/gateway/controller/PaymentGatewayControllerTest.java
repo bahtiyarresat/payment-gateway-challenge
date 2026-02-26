@@ -1,6 +1,5 @@
 package com.checkout.payment.gateway.controller;
 
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -34,24 +33,25 @@ class PaymentGatewayControllerTest {
     payment.setStatus(PaymentStatus.AUTHORIZED);
     payment.setExpiryMonth(12);
     payment.setExpiryYear(2024);
-    payment.setCardNumberLastFour(4321);
+    payment.setCardNumberLastFour("4321");
 
     paymentsRepository.add(payment);
 
-    mvc.perform(MockMvcRequestBuilders.get("/payment/" + payment.getId()))
+    mvc.perform(MockMvcRequestBuilders.get("/payments/" + payment.getId()))
         .andExpect(status().isOk())
         .andExpect(jsonPath("$.status").value(payment.getStatus().getName()))
-        .andExpect(jsonPath("$.cardNumberLastFour").value(payment.getCardNumberLastFour()))
-        .andExpect(jsonPath("$.expiryMonth").value(payment.getExpiryMonth()))
-        .andExpect(jsonPath("$.expiryYear").value(payment.getExpiryYear()))
+        .andExpect(jsonPath("$.card_number_last_four").value(payment.getCardNumberLastFour()))
+        .andExpect(jsonPath("$.expiry_month").value(payment.getExpiryMonth()))
+        .andExpect(jsonPath("$.expiry_year").value(payment.getExpiryYear()))
         .andExpect(jsonPath("$.currency").value(payment.getCurrency()))
         .andExpect(jsonPath("$.amount").value(payment.getAmount()));
   }
 
   @Test
   void whenPaymentWithIdDoesNotExistThen404IsReturned() throws Exception {
-    mvc.perform(MockMvcRequestBuilders.get("/payment/" + UUID.randomUUID()))
+    mvc.perform(MockMvcRequestBuilders.get("/payments/" + UUID.randomUUID()))
         .andExpect(status().isNotFound())
-        .andExpect(jsonPath("$.message").value("Page not found"));
+        .andExpect(jsonPath("$.code").value("PAYMENT_NOT_FOUND"))
+        .andExpect(jsonPath("$.message").value("Payment not found"));
   }
 }
