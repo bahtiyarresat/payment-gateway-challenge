@@ -85,6 +85,19 @@ Returns a previously processed payment by its ID. The full card number is never 
 
 **Response:** Same shape as the POST response above.
 
+**200 Response example:**
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "status": "Authorized",
+  "card_number_last_four": "8877",
+  "expiry_month": 4,
+  "expiry_year": 2030,
+  "currency": "GBP",
+  "amount": 100
+}
+```
+
 **404 Response:**
 ```json
 {
